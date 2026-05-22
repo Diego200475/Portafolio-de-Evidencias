@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unidades — Portafolio Cómputo en la Nube</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #05080f;
+      --surface: #0c1220;
+      --card: #101828;
+      --card2: #131f33;
+      --border: #1e2d45;
+      --border2: #253550;
+      --accent: #3b82f6;
+      --accent2: #06b6d4;
+      --accent3: #8b5cf6;
+      --accent4: #10b981;
+      --accent5: #f59e0b;
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --text-soft: #94a3b8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 999;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      padding: 1.1rem 3rem;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(5,8,15,0.9);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: -.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-back {
+      display: flex; align-items: center; gap: .4rem;
+      color: var(--text-soft);
+      text-decoration: none;
+      font-size: .88rem;
+      font-weight: 400;
+      transition: color .2s;
+    }
+    .nav-back:hover { color: var(--accent); }
+
+    /* ── HEADER ── */
+    .page-header {
+      padding: 5rem 2rem 3.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .page-header::after {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 400px; height: 300px;
+      background: radial-gradient(ellipse at top right, rgba(59,130,246,.15), transparent 70%);
+      pointer-events: none;
+    }
+    .page-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(59,130,246,.1);
+      border: 1px solid rgba(59,130,246,.25);
+      color: var(--accent);
+      font-size: .75rem;
+      font-weight: 500;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      padding: .3rem .85rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+    }
+    .page-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      letter-spacing: -.03em;
+      line-height: 1.1;
+    }
+    .page-title span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-subtitle {
+      color: var(--text-soft);
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* ── UNIT OVERVIEW BAR ── */
+    .units-overview {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem 3rem;
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+    .unit-pill {
+      display: flex; align-items: center; gap: .5rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: .5rem 1.1rem;
+      font-size: .82rem;
+      color: var(--text-soft);
+      cursor: pointer;
+      transition: all .2s;
+      text-decoration: none;
+    }
+    .unit-pill:hover, .unit-pill.active { border-color: var(--u-color); color: var(--text); }
+    .unit-pill .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--u-color);
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .main-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+
+    /* ── SIDEBAR (sticky TOC) ── */
+    .sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 5rem;
+    }
+    .sidebar-title {
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: .25rem; }
+    .toc-item a {
+      display: flex; align-items: center; gap: .6rem;
+      padding: .55rem .75rem;
+      border-radius: 7px;
+      font-size: .83rem;
+      color: var(--text-soft);
+      text-decoration: none;
+      transition: all .2s;
+      border: 1px solid transparent;
+    }
+    .toc-item a:hover { background: var(--card); color: var(--text); border-color: var(--border); }
+    .toc-item a.active { background: var(--card); color: var(--text); border-color: var(--border); }
+    .toc-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+
+    /* ── UNITS CONTENT ── */
+    .units-content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1.5rem; }
+
+    /* ── UNIT ACCORDION ── */
+    .unit-block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color .3s;
+    }
+    .unit-block.open { border-color: var(--u-color); }
+    .unit-block:hover { border-color: var(--border2); }
+
+    .unit-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.75rem 2rem;
+      cursor: pointer;
+      user-select: none;
+      gap: 1rem;
+    }
+    .unit-left { display: flex; align-items: center; gap: 1.25rem; min-width: 0; }
+    .unit-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--u-color);
+      line-height: 1;
+      min-width: 2.5rem;
+    }
+    .unit-info h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: -.01em;
+      line-height: 1.3;
+    }
+    .unit-info p {
+      font-size: .82rem;
+      color: var(--text-muted);
+      margin-top: .2rem;
+    }
+    .unit-meta {
+      display: flex; align-items: center; gap: 1rem; flex-shrink: 0;
+    }
+    .unit-count {
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: .3rem .85rem;
+      font-size: .78rem;
+      color: var(--text-soft);
+      white-space: nowrap;
+    }
+    .unit-chevron {
+      width: 32px; height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-soft);
+      transition: all .3s;
+      flex-shrink: 0;
+    }
+    .unit-block.open .unit-chevron {
+      transform: rotate(180deg);
+      border-color: var(--u-color);
+      color: var(--u-color);
+    }
+    .unit-chevron svg { transition: transform .3s; }
+
+    /* Activities list */
+    .unit-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .45s cubic-bezier(.4,0,.2,1);
+    }
+    .unit-block.open .unit-body { max-height: 5000px; }
+
+    .unit-divider { height: 1px; background: var(--border); margin: 0 2rem; }
+
+    .activities-list { padding: 1.5rem 1.5rem 1.5rem; display: flex; flex-direction: column; gap: .75rem; }
+
+    /* ── ACTIVITY ITEM ── */
+    .activity-item {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+    .activity-item:hover { border-color: var(--border2); }
+    .activity-item.open { border-color: var(--u-color); }
+
+    .activity-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.25rem;
+      cursor: pointer;
+      user-select: none;
+      gap: 1rem;
+    }
+    .activity-left { display: flex; align-items: center; gap: .85rem; min-width: 0; }
+    .activity-icon {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem;
+      flex-shrink: 0;
+    }
+    .activity-title {
+      font-size: .9rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .activity-right { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; }
+
+    .grade-badge {
+      font-family: 'Syne', sans-serif;
+      font-size: .82rem;
+      font-weight: 700;
+      padding: .25rem .7rem;
+      border-radius: 6px;
+      border: 1px solid;
+    }
+    .grade-a { background: rgba(16,185,129,.12); border-color: rgba(16,185,129,.3); color: #10b981; }
+    .grade-b { background: rgba(59,130,246,.12); border-color: rgba(59,130,246,.3); color: var(--accent); }
+    .grade-c { background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.3); color: var(--accent5); }
+    .grade-d { background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.3); color: #ef4444; }
+    .grade-na { background: rgba(100,116,139,.1); border-color: rgba(100,116,139,.2); color: var(--text-muted); }
+
+    .act-chevron {
+      color: var(--text-muted);
+      transition: transform .3s;
+    }
+    .activity-item.open .act-chevron { transform: rotate(180deg); }
+
+    /* Activity detail panel */
+    .activity-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .4s cubic-bezier(.4,0,.2,1);
+    }
+    .activity-item.open .activity-body { max-height: 2000px; }
+
+    .activity-detail {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 1.25rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    .detail-section { display: flex; flex-direction: column; gap: .5rem; }
+    .detail-label {
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .detail-text {
+      font-size: .88rem;
+      color: var(--text-soft);
+      line-height: 1.7;
+    }
+    .detail-full { grid-column: 1 / -1; }
+
+    .pdf-link {
+      display: inline-flex; align-items: center; gap: .5rem;
+      margin-top: .5rem;
+      background: rgba(59,130,246,.1);
+      border: 1px solid rgba(59,130,246,.25);
+      color: var(--accent);
+      font-size: .82rem;
+      font-weight: 500;
+      padding: .55rem 1rem;
+      border-radius: 7px;
+      text-decoration: none;
+      transition: all .2s;
+    }
+    .pdf-link:hover { background: rgba(59,130,246,.18); border-color: var(--accent); transform: translateY(-1px); }
+
+    .learnings-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+      margin-top: .25rem;
+    }
+    .learnings-list li {
+      display: flex; align-items: flex-start; gap: .5rem;
+      font-size: .87rem;
+      color: var(--text-soft);
+    }
+    .learnings-list li::before {
+      content: '→';
+      color: var(--u-color, var(--accent));
+      flex-shrink: 0;
+      font-size: .8rem;
+      margin-top: .15rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      nav { padding: 1rem 1.5rem; }
+    }
+    @media (max-width: 640px) {
+      .main-container { padding: 0 1rem 4rem; }
+      .units-overview { padding: 0 1rem 2rem; }
+      .page-header { padding: 3rem 1rem 2rem; }
+      .activity-detail { grid-template-columns: 1fr; }
+      .detail-full { grid-column: 1; }
+      .unit-meta .unit-count { display: none; }
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .unit-block { animation: fadeIn .5s ease both; }
+    .unit-block:nth-child(1) { animation-delay: .05s; }
+    .unit-block:nth-child(2) { animation-delay: .1s; }
+    .unit-block:nth-child(3) { animation-delay: .15s; }
+    .unit-block:nth-child(4) { animation-delay: .2s; }
+    .unit-block:nth-child(5) { animation-delay: .25s; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">Portafolio<span>.CN</span></a>
+    <a href="index.html" class="nav-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg>
+      Volver al inicio
+    </a>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="page-badge">📂 Contenido del curso</div>
+    <h1 class="page-title">Unidades y <span>Evidencias</span></h1>
+    <p class="page-subtitle">5 unidades · Cómputo en la Nube · TecNM Campus Saltillo</p>
+  </div>
+
+  <!-- QUICK NAV PILLS -->
+  <div class="units-overview">
+    <a href="#u1" class="unit-pill" style="--u-color:#3b82f6"><span class="dot"></span>Unidad 1</a>
+    <a href="#u2" class="unit-pill" style="--u-color:#06b6d4"><span class="dot"></span>Unidad 2</a>
+    <a href="#u3" class="unit-pill" style="--u-color:#8b5cf6"><span class="dot"></span>Unidad 3</a>
+    <a href="#u4" class="unit-pill" style="--u-color:#f59e0b"><span class="dot"></span>Unidad 4</a>
+    <a href="#u5" class="unit-pill" style="--u-color:#10b981"><span class="dot"></span>Unidad 5</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-container">
+
+    <!-- SIDEBAR TOC -->
+    <aside class="sidebar">
+      <p class="sidebar-title">Navegación</p>
+      <ul class="toc-list">
+        <li class="toc-item"><a href="#u1"><span class="toc-dot" style="background:#3b82f6"></span>Fundamentos</a></li>
+        <li class="toc-item"><a href="#u2"><span class="toc-dot" style="background:#06b6d4"></span>Arquitectura</a></li>
+        <li class="toc-item"><a href="#u3"><span class="toc-dot" style="background:#8b5cf6"></span>Desarrollo</a></li>
+        <li class="toc-item"><a href="#u4"><span class="toc-dot" style="background:#f59e0b"></span>Seguridad</a></li>
+        <li class="toc-item"><a href="#u5"><span class="toc-dot" style="background:#10b981"></span>Diseño y Despliegue</a></li>
+      </ul>
+    </aside>
+
+    <!-- UNITS -->
+    <div class="units-content">
+
+      <!-- ═══════════════════════════════ UNIDAD 1 ═══════════════════════════════ -->
+      <div class="unit-block" id="u1" style="--u-color:#3b82f6">
+        <div class="unit-header" onclick="toggleUnit(this)">
+          <div class="unit-left">
+            <span class="unit-num">01</span>
+            <div class="unit-info">
+              <h2>Introducción y Fundamentos de Cómputo en la Nube</h2>
+              <p>Conceptos base, arquitecturas de red y modelos cloud</p>
+            </div>
+          </div>
+          <div class="unit-meta">
+            <span class="unit-count">4 actividades</span>
+            <div class="unit-chevron">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="unit-body">
+          <div class="unit-divider"></div>
+          <div class="activities-list">
+
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left">
+                  <div class="activity-icon">🌐</div>
+                  <span class="activity-title">1.1 — Arquitectura de red de computadoras</span>
+                </div>
+                <div class="activity-right">
+                  <span class="grade-badge grade-a">85</span>
+                  <svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg>
+                </div>
+              </div>
+              <div class="activity-body">
+                <div class="activity-detail">
+                  <div class="detail-section">
+                    <span class="detail-label">Descripción</span>
+                    <p class="detail-text">Investigación y análisis de los modelos de arquitectura de redes de computadoras, incluyendo topologías, protocolos y su relación con la infraestructura cloud.</p>
+                  </div>
+                  <div class="detail-section">
+                    <span class="detail-label">Aprendizajes obtenidos</span>
+                    <ul class="learnings-list">
+                      <li>Identificar topologías de red y sus aplicaciones</li>
+                      <li>Comprender el modelo OSI y TCP/IP</li>
+                      <li>Relacionar la arquitectura de red con entornos cloud</li>
+                    </ul>
+                  </div>
+                  <div class="detail-section detail-full">
+                    <span class="detail-label">Evidencia (PDF)</span>
+                    <a href="archivos_evidencias/1.1 Arquitectura de red de computadoras.pdf" class="pdf-link">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                      Ver evidencia PDF — Tema 1.1
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left">
+                  <div class="activity-icon">☁️</div>
+                  <span class="activity-title">1.2 — Síntesis de las Características de Cómputo en la Nube</span>
+                </div>
+                <div class="activity-right">
+                  <span class="grade-badge grade-a">90</span>
+                  <svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg>
+                </div>
+              </div>
+              <div class="activity-body">
+                <div class="activity-detail">
+                  <div class="detail-section">
+                    <span class="detail-label">Descripción</span>
+                    <p class="detail-text">Síntesis de los conceptos fundamentales del cómputo en la nube: definición, características esenciales, modelos de servicio (IaaS, PaaS, SaaS) y modelos de despliegue.</p>
+                  </div>
+                  <div class="detail-section">
+                    <span class="detail-label">Aprendizajes obtenidos</span>
+                    <ul class="learnings-list">
+                      <li>Definir con precisión el cómputo en la nube</li>
+                      <li>Distinguir entre IaaS, PaaS y SaaS</li>
+                      <li>Identificar modelos de despliegue (público, privado, híbrido)</li>
+                    </ul>
+                  </div>
+                  <div class="detail-section detail-full">
+                    <span class="detail-label">Evidencia (PDF)</span>
+                    <a href="archivos_evidencias/1.2 Síntesis de las Características de concepto de Cómputo en la Nube.pdf" class="pdf-link">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                      Ver evidencia PDF — Tema 1.2
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left">
+                  <div class="activity-icon">⚖️</div>
+                  <span class="activity-title">1.3 — Ventajas, Desventajas y Riesgos del Cómputo en la Nube</span>
+                </div>
+                <div class="activity-right">
+                  <span class="grade-badge grade-a">90</span>
+                  <svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg>
+                </div>
+              </div>
+              <div class="activity-body">
+                <div class="activity-detail">
+                  <div class="detail-section">
+                    <span class="detail-label">Descripción</span>
+                    <p class="detail-text">Análisis comparativo de las ventajas (escalabilidad, costo, accesibilidad), desventajas (dependencia de internet, latencia) y riesgos (seguridad, privacidad) del cómputo en la nube.</p>
+                  </div>
+                  <div class="detail-section">
+                    <span class="detail-label">Aprendizajes obtenidos</span>
+                    <ul class="learnings-list">
+                      <li>Evaluar pros y contras del modelo cloud</li>
+                      <li>Identificar riesgos de seguridad y privacidad</li>
+                      <li>Tomar decisiones informadas sobre adopción cloud</li>
+                    </ul>
+                  </div>
+                  <div class="detail-section detail-full">
+                    <span class="detail-label">Evidencia (PDF)</span>
+                    <a href="archivos_evidencias/1.3 Ventajas, Desventajas y Riesgos del Cómputo en la Nube.pdf" class="pdf-link">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                      Ver evidencia PDF — Tema 1.3
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left">
+                  <div class="activity-icon">🗺️</div>
+                  <span class="activity-title">1.4 — Mapa mental de los elementos del Cómputo en la Nube</span>
+                </div>
+                <div class="activity-right">
+                  <span class="grade-badge grade-a">90</span>
+                  <svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg>
+                </div>
+              </div>
+              <div class="activity-body">
+                <div class="activity-detail">
+                  <div class="detail-section">
+                    <span class="detail-label">Descripción</span>
+                    <p class="detail-text">Elaboración de un mapa mental que integra todos los elementos del cómputo en la nube: modelos, servicios, proveedores, infraestructura y casos de uso.</p>
+                  </div>
+                  <div class="detail-section">
+                    <span class="detail-label">Aprendizajes obtenidos</span>
+                    <ul class="learnings-list">
+                      <li>Sintetizar visualmente conceptos complejos</li>
+                      <li>Relacionar todos los elementos del ecosistema cloud</li>
+                      <li>Fortalecer la comprensión holística de la nube</li>
+                    </ul>
+                  </div>
+                  <div class="detail-section detail-full">
+                    <span class="detail-label">Evidencia (PDF)</span>
+                    <a href="archivos_evidencias/1.4 Mapa mental de los elementos del Cómputo en la Nube.pdf" class="pdf-link">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                      Ver evidencia PDF — Tema 1.4
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════ UNIDAD 2 ═══════════════════════════════ -->
+      <div class="unit-block" id="u2" style="--u-color:#06b6d4">
+        <div class="unit-header" onclick="toggleUnit(this)">
+          <div class="unit-left">
+            <span class="unit-num">02</span>
+            <div class="unit-info">
+              <h2>Arquitectura de la Nube</h2>
+              <p>Exploración de AWS, GCP, Azure y GitHub</p>
+            </div>
+          </div>
+          <div class="unit-meta">
+            <span class="unit-count">4 actividades</span>
+            <div class="unit-chevron">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="unit-body">
+          <div class="unit-divider"></div>
+          <div class="activities-list">
+
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left">
+                  <div class="activity-icon">🟠</div>
+                  <span class="activity-title">2.1 — Explorar la plataforma AWS</span>
+                </div>
+                <div class="activity-right">
+                  <span class="grade-badge grade-a">Sin Calificar</span>
+                  <svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg>
+                </div>
+              </div>
+              <div class="activity-body">
+                <div class="activity-detail">
+                  <div class="detail-section">
+                    <span class="detail-label">Descripción</span>
+                    <p class="detail-text">Exploración práctica de Amazon Web Services: navegación por la consola, identificación de servicios principales (EC2, S3, RDS, Lambda) y creación de una cuenta.</p>
+                  </div>
+                  <div class="detail-section">
+                    <span class="detail-label">Aprendizajes obtenidos</span>
+                    <ul class="learnings-list">
+                      <li>Navegar la consola de administración de AWS</li>
+                      <li>Identificar los servicios más utilizados de AWS</li>
+                      <li>Comprender el modelo de precios y la capa gratuita</li>
+                    </ul>
+                  </div>
+                  <div class="detail-section detail-full">
+                    <span class="detail-label">Evidencia (PDF)</span>
+                    <a href="archivos_evidencias/2.1 Explorar la plataforma AWS.pdf" class="pdf-link">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                      Ver evidencia PDF — Tema 2.1
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left">
+                  <div class="activity-icon">🔵</div>
+                  <span class="activity-title">2.2 — Explorar plataforma Google Cloud</span>
+                </div>
+                <div class="activity-right">
+                  <span class="grade-badge grade-a">Sin Calificar</span>
+                  <svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg>
+                </div>
+              </div>
+              <div class="activity-body">
+                <div class="activity-detail">
+                  <div class="detail-section">
+                    <span class="detail-label">Descripción</span>
+                    <p class="detail-text">Exploración de Google Cloud Platform: consola, Cloud Shell, servicios de cómputo (Compute Engine, Cloud Run) y almacenamiento (Cloud Storage, Firestore).</p>
+                  </div>
+                  <div class="detail-section">
+                    <span class="detail-label">Aprendizajes obtenidos</span>
+                    <ul class="learnings-list">
+                      <li>Usar Google Cloud Console y Cloud Shell</li>
+                      <li>Comparar GCP con AWS en servicios equivalentes</li>
+                      <li>Crear proyectos y gestionar recursos en GCP</li>
+                    </ul>
+                  </div>
+                  <div class="detail-section detail-full">
+                    <span class="detail-label">Evidencia (PDF)</span>
+                    <a href="archivos_evidencias/2.2 Explorar la plataforma Google Cloud.pdf" class="pdf-link">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                      Ver evidencia PDF — Tema 2.2
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left">
+                  <div class="activity-icon">🐱</div>
+                  <span class="activity-title">2.3 — Actividad GitHub</span>
+                </div>
+                <div class="activity-right">
+                  <span class="grade-badge grade-a">90</span>
+                  <svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg>
+                </div>
+              </div>
+              <div class="activity-body">
+                <div class="activity-detail">
+                  <div class="detail-section">
+                    <span class="detail-label">Descripción</span>
+                    <p class="detail-text">Creación y gestión de repositorios en GitHub: commits, branches, pull requests y uso de GitHub como herramienta de control de versiones en proyectos cloud.</p>
+                  </div>
+                  <div class="detail-section">
+                    <span class="detail-label">Aprendizajes obtenidos</span>
+                    <ul class="learnings-list">
+                      <li>Gestionar repositorios con Git y GitHub</li>
+                      <li>Aplicar flujo de trabajo con ramas y PRs</li>
+                      <li>Integrar GitHub con pipelines CI/CD</li>
+                    </ul>
+                  </div>
+                  <div class="detail-section detail-full">
+                    <span class="detail-label">Evidencia (PDF)</span>
+                    <a href="archivos_evidencias/2.3 Explorar GitHub.pdf" class="pdf-link">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                      Ver evidencia PDF — Tema 2.3
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left">
+                  <div class="activity-icon">🪟</div>
+                  <span class="activity-title">2.4 — Explorar la plataforma MS Azure</span>
+                </div>
+                <div class="activity-right">
+                  <span class="grade-badge grade-a">Sin Calificar</span>
+                  <svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg>
+                </div>
+              </div>
+              <div class="activity-body">
+                <div class="activity-detail">
+                  <div class="detail-section">
+                    <span class="detail-label">Descripción</span>
+                    <p class="detail-text">Exploración de Microsoft Azure: portal de gestión, Azure Virtual Machines, Azure Blob Storage, Azure Active Directory y comparación con AWS y GCP.</p>
+                  </div>
+                  <div class="detail-section">
+                    <span class="detail-label">Aprendizajes obtenidos</span>
+                    <ul class="learnings-list">
+                      <li>Navegar el portal de Azure y sus servicios</li>
+                      <li>Crear y configurar recursos básicos en Azure</li>
+                      <li>Comparar los tres grandes proveedores cloud</li>
+                    </ul>
+                  </div>
+                  <div class="detail-section detail-full">
+                    <span class="detail-label">Evidencia (PDF)</span>
+                    <a href="archivos_evidencias/2.4 Explorar la plataforma MS Azure.pdf" class="pdf-link">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                      Ver evidencia PDF — Tema 2.4
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════ UNIDAD 3 ═══════════════════════════════ -->
+      <div class="unit-block" id="u3" style="--u-color:#8b5cf6">
+        <div class="unit-header" onclick="toggleUnit(this)">
+          <div class="unit-left">
+            <span class="unit-num">03</span>
+            <div class="unit-info">
+              <h2>Consideraciones para el Desarrollo</h2>
+              <p>Microservicios y flujo DevOps</p>
+            </div>
+          </div>
+          <div class="unit-meta">
+            <span class="unit-count">1 actividad</span>
+            <div class="unit-chevron">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="unit-body">
+          <div class="unit-divider"></div>
+          <div class="activities-list">
+
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left">
+                  <div class="activity-icon">🔗</div>
+                  <span class="activity-title">3.1 — Sinopsis de los microservicios y flujo DevOps</span>
+                </div>
+                <div class="activity-right">
+                  <span class="grade-badge grade-a">90</span>
+                  <svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg>
+                </div>
+              </div>
+              <div class="activity-body">
+                <div class="activity-detail">
+                  <div class="detail-section">
+                    <span class="detail-label">Descripción</span>
+                    <p class="detail-text">Análisis de la arquitectura de microservicios como alternativa a los sistemas monolíticos, y comprensión del flujo DevOps (CI/CD) para el desarrollo y despliegue continuo de aplicaciones en la nube.</p>
+                  </div>
+                  <div class="detail-section">
+                    <span class="detail-label">Aprendizajes obtenidos</span>
+                    <ul class="learnings-list">
+                      <li>Comprender la arquitectura de microservicios</li>
+                      <li>Identificar las fases del ciclo DevOps</li>
+                      <li>Aplicar CI/CD en proyectos cloud</li>
+                      <li>Comparar microservicios vs arquitectura monolítica</li>
+                    </ul>
+                  </div>
+                  <div class="detail-section detail-full">
+                    <span class="detail-label">Evidencia (PDF)</span>
+                    <a href="archivos_evidencias/3.1 Sinopsis de los microservicios y flujo DevOps.pdf" class="pdf-link">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                      Ver evidencia PDF — Tema 3.1
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════ UNIDAD 4 ═══════════════════════════════ -->
+      <div class="unit-block" id="u4" style="--u-color:#f59e0b">
+        <div class="unit-header" onclick="toggleUnit(this)">
+          <div class="unit-left">
+            <span class="unit-num">04</span>
+            <div class="unit-info">
+              <h2>Seguridad</h2>
+              <p>Ciberseguridad, hardening, inyección SQL y análisis de red</p>
+            </div>
+          </div>
+          <div class="unit-meta">
+            <span class="unit-count">10 actividades</span>
+            <div class="unit-chevron">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="unit-body">
+          <div class="unit-divider"></div>
+          <div class="activities-list">
+
+            <!-- 4.1 -->
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left"><div class="activity-icon">🔐</div><span class="activity-title">4.1 — Práctica de seguridad informática: escalada de privilegios</span></div>
+                <div class="activity-right"><span class="grade-badge grade-a">95</span><svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg></div>
+              </div>
+              <div class="activity-body"><div class="activity-detail">
+                <div class="detail-section"><span class="detail-label">Descripción</span><p class="detail-text">Práctica de escalada de privilegios en un entorno controlado, identificando vulnerabilidades comunes que permiten a un usuario obtener permisos de administrador no autorizados.</p></div>
+                <div class="detail-section"><span class="detail-label">Aprendizajes obtenidos</span><ul class="learnings-list"><li>Identificar vectores de escalada de privilegios</li><li>Aplicar técnicas de hardening para prevenirlos</li><li>Comprender la importancia del principio de mínimo privilegio</li></ul></div>
+                <div class="detail-section detail-full"><span class="detail-label">Evidencia (PDF)</span><a href="archivos_evidencias/4.1 Practica de seguridad informatica escalada de privilegios.pdf" class="pdf-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ver evidencia PDF — Tema 4.1</a></div>
+              </div></div>
+            </div>
+
+            <!-- 4.2 -->
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left"><div class="activity-icon">💉</div><span class="activity-title">4.2 — Demostrar la inyección SQL</span></div>
+                <div class="activity-right"><span class="grade-badge grade-a">80</span><svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg></div>
+              </div>
+              <div class="activity-body"><div class="activity-detail">
+                <div class="detail-section"><span class="detail-label">Descripción</span><p class="detail-text">Demostración práctica de ataques de inyección SQL en un entorno de laboratorio, incluyendo extracción de datos, bypass de autenticación y medidas de mitigación.</p></div>
+                <div class="detail-section"><span class="detail-label">Aprendizajes obtenidos</span><ul class="learnings-list"><li>Ejecutar y comprender ataques SQL Injection</li><li>Usar consultas parametrizadas como defensa</li><li>Aplicar validación de entradas en aplicaciones web</li></ul></div>
+                <div class="detail-section detail-full"><span class="detail-label">Evidencia (PDF)</span><a href="archivos_evidencias/4.2 Demostrar la inyeccion SQL.pdf" class="pdf-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ver evidencia PDF — Tema 4.2</a></div>
+              </div></div>
+            </div>
+
+            <!-- 4.3 -->
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left"><div class="activity-icon">🛡️</div><span class="activity-title">4.3 — Seguridad (hardening) en servidor web Apache 2</span></div>
+                <div class="activity-right"><span class="grade-badge grade-a">80</span><svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg></div>
+              </div>
+              <div class="activity-body"><div class="activity-detail">
+                <div class="detail-section"><span class="detail-label">Descripción</span><p class="detail-text">Configuración y aplicación de técnicas de hardening en un servidor Apache 2: deshabilitar módulos innecesarios, configurar headers de seguridad, implementar SSL/TLS y restricciones de acceso.</p></div>
+                <div class="detail-section"><span class="detail-label">Aprendizajes obtenidos</span><ul class="learnings-list"><li>Aplicar hardening en Apache 2 en Linux</li><li>Configurar headers HTTP de seguridad</li><li>Implementar certificados SSL/TLS</li></ul></div>
+                <div class="detail-section detail-full"><span class="detail-label">Evidencia (PDF)</span><a href="archivos_evidencias/4.3 Seguridad (hardening) en servidor web Apache 2.pdf" class="pdf-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ver evidencia PDF — Tema 4.3</a></div>
+              </div></div>
+            </div>
+
+            <!-- 4.5 -->
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left"><div class="activity-icon">🔍</div><span class="activity-title">4.5 — Comandos Dorks de Google</span></div>
+                <div class="activity-right"><span class="grade-badge grade-a">90</span><svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg></div>
+              </div>
+              <div class="activity-body"><div class="activity-detail">
+                <div class="detail-section"><span class="detail-label">Descripción</span><p class="detail-text">Uso de Google Dorks (operadores avanzados de búsqueda) para técnicas de OSINT y reconocimiento de información pública que podría ser explotada por atacantes.</p></div>
+                <div class="detail-section"><span class="detail-label">Aprendizajes obtenidos</span><ul class="learnings-list"><li>Aplicar operadores avanzados de Google</li><li>Realizar reconocimiento OSINT ético</li><li>Proteger información sensible de indexación</li></ul></div>
+                <div class="detail-section detail-full"><span class="detail-label">Evidencia (PDF)</span><a href="archivos_evidencias/4.5 Comandos Dorks de Goolge.pdf" class="pdf-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ver evidencia PDF — Tema 4.5</a></div>
+              </div></div>
+            </div>
+
+            <!-- 4.6 -->
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left"><div class="activity-icon">🌩️</div><span class="activity-title">4.6 — Lluvia de conceptos: aspectos de la ciberseguridad en la nube</span></div>
+                <div class="activity-right"><span class="grade-badge grade-a">85</span><svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg></div>
+              </div>
+              <div class="activity-body"><div class="activity-detail">
+                <div class="detail-section"><span class="detail-label">Descripción</span><p class="detail-text">Actividad colaborativa de lluvia de ideas para identificar y categorizar los principales aspectos de la ciberseguridad aplicados al cómputo en la nube: amenazas, controles, marcos y buenas prácticas.</p></div>
+                <div class="detail-section"><span class="detail-label">Aprendizajes obtenidos</span><ul class="learnings-list"><li>Identificar los pilares de la ciberseguridad cloud</li><li>Conocer marcos como NIST y CSA</li><li>Mapear amenazas y controles en entornos cloud</li></ul></div>
+                <div class="detail-section detail-full"><span class="detail-label">Evidencia (PDF)</span><a href="archivos_evidencias/4.6 Lluvia de conceptos de los aspectos de la ciberseguridad en la nube.pdf" class="pdf-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ver evidencia PDF — Tema 4.6</a></div>
+              </div></div>
+            </div>
+
+            <!-- 4.7 -->
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left"><div class="activity-icon">🔓</div><span class="activity-title">4.7 — Encontrar la contraseña (OverTheWire)</span></div>
+                <div class="activity-right"><span class="grade-badge grade-a">80</span><svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg></div>
+              </div>
+              <div class="activity-body"><div class="activity-detail">
+                <div class="detail-section"><span class="detail-label">Descripción</span><p class="detail-text">Resolución de niveles del wargame OverTheWire (Bandit), practicando comandos Linux, manejo de archivos, permisos y técnicas básicas de CTF (Capture The Flag) para encontrar contraseñas ocultas.</p></div>
+                <div class="detail-section"><span class="detail-label">Aprendizajes obtenidos</span><ul class="learnings-list"><li>Dominar comandos esenciales de Linux/Bash</li><li>Comprender permisos y estructura de archivos</li><li>Desarrollar pensamiento orientado a seguridad ofensiva</li></ul></div>
+                <div class="detail-section detail-full"><span class="detail-label">Evidencia (PDF)</span><a href="archivos_evidencias/4.7 Encontrar la contraseña (overthewire).pdf" class="pdf-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ver evidencia PDF — Tema 4.7</a></div>
+              </div></div>
+            </div>
+
+            <!-- 4.8 -->
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left"><div class="activity-icon">⚠️</div><span class="activity-title">4.8 — Amenazas y Riesgos en Cómputo en la Nube</span></div>
+                <div class="activity-right"><span class="grade-badge grade-a">85</span><svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg></div>
+              </div>
+              <div class="activity-body"><div class="activity-detail">
+                <div class="detail-section"><span class="detail-label">Descripción</span><p class="detail-text">Investigación y clasificación de las principales amenazas y riesgos en entornos cloud: data breaches, DDoS, configuraciones erróneas, insider threats y gestión de identidades comprometidas.</p></div>
+                <div class="detail-section"><span class="detail-label">Aprendizajes obtenidos</span><ul class="learnings-list"><li>Clasificar amenazas según el modelo STRIDE</li><li>Identificar los riesgos más críticos en cloud (OWASP)</li><li>Proponer controles y mitigaciones específicas</li></ul></div>
+                <div class="detail-section detail-full"><span class="detail-label">Evidencia (PDF)</span><a href="archivos_evidencias/4.8 Amenazas y Riesgos en Cómputo en la Nube.pdf" class="pdf-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ver evidencia PDF — Tema 4.8</a></div>
+              </div></div>
+            </div>
+
+            <!-- 4.9 -->
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left"><div class="activity-icon">📜</div><span class="activity-title">4.9 — Políticas de ciberseguridad en CN</span></div>
+                <div class="activity-right"><span class="grade-badge grade-a">85</span><svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg></div>
+              </div>
+              <div class="activity-body"><div class="activity-detail">
+                <div class="detail-section"><span class="detail-label">Descripción</span><p class="detail-text">Elaboración de un documento de políticas de ciberseguridad para un entorno cloud, abarcando control de acceso, gestión de contraseñas, cifrado de datos y respuesta a incidentes.</p></div>
+                <div class="detail-section"><span class="detail-label">Aprendizajes obtenidos</span><ul class="learnings-list"><li>Redactar políticas de seguridad empresariales</li><li>Aplicar marcos normativos (ISO 27001, NIST)</li><li>Diseñar procedimientos de respuesta a incidentes</li></ul></div>
+                <div class="detail-section detail-full"><span class="detail-label">Evidencia (PDF)</span><a href="archivos_evidencias/4.9 Políticas de ciberseguridad en CN.pdf" class="pdf-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ver evidencia PDF — Tema 4.9</a></div>
+              </div></div>
+            </div>
+
+            <!-- 4.10 -->
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left"><div class="activity-icon">📡</div><span class="activity-title">4.10 — Análisis de tráfico de red con Wireshark</span></div>
+                <div class="activity-right"><span class="grade-badge grade-a">80</span><svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg></div>
+              </div>
+              <div class="activity-body"><div class="activity-detail">
+                <div class="detail-section"><span class="detail-label">Descripción</span><p class="detail-text">Captura y análisis de paquetes de red con Wireshark para identificar protocolos, detectar anomalías y patrones de ataque, y aplicar filtros de captura avanzados para la prevención de intrusiones.</p></div>
+                <div class="detail-section"><span class="detail-label">Aprendizajes obtenidos</span><ul class="learnings-list"><li>Capturar y filtrar tráfico de red con Wireshark</li><li>Identificar protocolos y flujos de datos</li><li>Detectar patrones sospechosos en el tráfico</li></ul></div>
+                <div class="detail-section detail-full"><span class="detail-label">Evidencia (PDF)</span><a href="archivos_evidencias/4.10 Analisis de trafico de red con Wireshark para la prevención de ataques.pdf.pdf" class="pdf-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ver evidencia PDF — Tema 4.10</a></div>
+              </div></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════ UNIDAD 5 ═══════════════════════════════ -->
+      <div class="unit-block" id="u5" style="--u-color:#10b981">
+        <div class="unit-header" onclick="toggleUnit(this)">
+          <div class="unit-left">
+            <span class="unit-num">05</span>
+            <div class="unit-info">
+              <h2>Diseño y Desarrollo de una Aplicación en la Nube</h2>
+              <p>Docker, VMs, LAMP, CRUD y despliegue en producción</p>
+            </div>
+          </div>
+          <div class="unit-meta">
+            <span class="unit-count">8 actividades</span>
+            <div class="unit-chevron">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="unit-body">
+          <div class="unit-divider"></div>
+          <div class="activities-list">
+
+            <!-- 5.2 -->
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left"><div class="activity-icon">🏗️</div><span class="activity-title">5.2 — Análisis y Diseño de una Arquitectura de Red en la Nube (Caso Real)</span></div>
+                <div class="activity-right"><span class="grade-badge grade-a">90</span><svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg></div>
+              </div>
+              <div class="activity-body"><div class="activity-detail">
+                <div class="detail-section"><span class="detail-label">Descripción</span><p class="detail-text">Diseño de una arquitectura de red cloud para un caso de uso real, incluyendo diagramas de componentes, selección de servicios, estimación de costos y consideraciones de alta disponibilidad.</p></div>
+                <div class="detail-section"><span class="detail-label">Aprendizajes obtenidos</span><ul class="learnings-list"><li>Diseñar arquitecturas cloud resilientes</li><li>Seleccionar servicios adecuados para cada necesidad</li><li>Documentar arquitecturas con diagramas profesionales</li></ul></div>
+                <div class="detail-section detail-full"><span class="detail-label">Evidencia (PDF)</span><a href="archivos_evidencias/5.2 Analisis y Diseño de una Arquitectura de Red en la Nube.pdf" class="pdf-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ver evidencia PDF — Tema 5.2</a></div>
+              </div></div>
+            </div>
+
+            <!-- 5.3 -->
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left"><div class="activity-icon">📦</div><span class="activity-title">5.3 — Curso introducción a la contenerización y virtualización</span></div>
+                <div class="activity-right"><span class="grade-badge grade-a">90</span><svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg></div>
+              </div>
+              <div class="activity-body"><div class="activity-detail">
+                <div class="detail-section"><span class="detail-label">Descripción</span><p class="detail-text">Curso introductorio sobre los conceptos de virtualización (hipervisores, VMs) y contenerización (Docker, contenedores), sus diferencias, ventajas y casos de uso en entornos cloud modernos.</p></div>
+                <div class="detail-section"><span class="detail-label">Aprendizajes obtenidos</span><ul class="learnings-list"><li>Distinguir virtualización de contenerización</li><li>Comprender el ciclo de vida de un contenedor</li><li>Aplicar Docker para desplegar aplicaciones</li></ul></div>
+                <div class="detail-section detail-full"><span class="detail-label">Evidencia (PDF)</span><a href="archivos_evidencias/5.3 Curso introducción a la contenerización y virtualización.pdf" class="pdf-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ver evidencia PDF — Tema 5.3</a></div>
+              </div></div>
+            </div>
+
+            <!-- 5.4 -->
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left"><div class="activity-icon">🐳</div><span class="activity-title">5.4 — Instalación de Docker</span></div>
+                <div class="activity-right"><span class="grade-badge grade-a">90</span><svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg></div>
+              </div>
+              <div class="activity-body"><div class="activity-detail">
+                <div class="detail-section"><span class="detail-label">Descripción</span><p class="detail-text">Instalación y configuración de Docker en una máquina local o virtual. Ejecución de los primeros contenedores, uso de Docker Hub y creación de imágenes con Dockerfile.</p></div>
+                <div class="detail-section"><span class="detail-label">Aprendizajes obtenidos</span><ul class="learnings-list"><li>Instalar y configurar Docker Engine</li><li>Ejecutar y gestionar contenedores básicos</li><li>Crear imágenes personalizadas con Dockerfile</li></ul></div>
+                <div class="detail-section detail-full"><span class="detail-label">Evidencia (PDF)</span><a href="archivos_evidencias/5.4 Instalacion de Docker.pdf" class="pdf-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ver evidencia PDF — Tema 5.4</a></div>
+              </div></div>
+            </div>
+
+            <!-- 5.7 -->
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left"><div class="activity-icon">🖥️</div><span class="activity-title">5.7 — Creación de VM en la nube</span></div>
+                <div class="activity-right"><span class="grade-badge grade-a">90</span><svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg></div>
+              </div>
+              <div class="activity-body"><div class="activity-detail">
+                <div class="detail-section"><span class="detail-label">Descripción</span><p class="detail-text">Creación y configuración de una máquina virtual en alguno de los proveedores cloud vistos en clase (AWS EC2, GCP Compute Engine o Azure VM), incluyendo conexión SSH y configuración básica del sistema.</p></div>
+                <div class="detail-section"><span class="detail-label">Aprendizajes obtenidos</span><ul class="learnings-list"><li>Crear y configurar VMs en la nube</li><li>Conectarse mediante SSH a servidores remotos</li><li>Gestionar grupos de seguridad y reglas de firewall</li></ul></div>
+                <div class="detail-section detail-full"><span class="detail-label">Evidencia (PDF)</span><a href="archivos_evidencias/5.7 Creacion de VM en la nube.pdf" class="pdf-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ver evidencia PDF — Tema 5.7</a></div>
+              </div></div>
+            </div>
+
+            <!-- 5.8 -->
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left"><div class="activity-icon">💡</div><span class="activity-title">5.8 — Instalación del entorno LAMP en una VM en la nube</span></div>
+                <div class="activity-right"><span class="grade-badge grade-a">90</span><svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg></div>
+              </div>
+              <div class="activity-body"><div class="activity-detail">
+                <div class="detail-section"><span class="detail-label">Descripción</span><p class="detail-text">Instalación y configuración del stack LAMP (Linux, Apache, MySQL, PHP) en una máquina virtual alojada en infraestructura cloud, preparando el entorno para el despliegue de aplicaciones web.</p></div>
+                <div class="detail-section"><span class="detail-label">Aprendizajes obtenidos</span><ul class="learnings-list"><li>Instalar y configurar Apache, MySQL y PHP en Linux</li><li>Gestionar bases de datos MySQL desde terminal</li><li>Preparar un servidor web para producción</li></ul></div>
+                <div class="detail-section detail-full"><span class="detail-label">Evidencia (PDF)</span><a href="archivos_evidencias/5.8 Instalación entorno LAMP.pdf" class="pdf-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ver evidencia PDF — Tema 5.8</a></div>
+              </div></div>
+            </div>
+
+            <!-- 5.9 -->
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left"><div class="activity-icon">🚀</div><span class="activity-title">5.9 — Despliegue de aplicación CRUD en la nube</span></div>
+                <div class="activity-right"><span class="grade-badge grade-a">90</span><svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg></div>
+              </div>
+              <div class="activity-body"><div class="activity-detail">
+                <div class="detail-section"><span class="detail-label">Descripción</span><p class="detail-text">Desarrollo y despliegue de una aplicación web con operaciones CRUD (Create, Read, Update, Delete) completa en infraestructura cloud, utilizando el stack LAMP instalado en la actividad anterior.</p></div>
+                <div class="detail-section"><span class="detail-label">Aprendizajes obtenidos</span><ul class="learnings-list"><li>Desarrollar aplicaciones CRUD con PHP y MySQL</li><li>Desplegar aplicaciones en servidores cloud reales</li><li>Gestionar el ciclo completo de una aplicación web</li></ul></div>
+                <div class="detail-section detail-full"><span class="detail-label">Evidencia (PDF)</span><a href="archivos_evidencias/5.9 Despliegue de aplicación CRUD en la nube.pdf" class="pdf-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ver evidencia PDF — Tema 5.9</a></div>
+              </div></div>
+            </div>
+
+            <!-- 5.10 -->
+            <div class="activity-item" onclick="toggleActivity(this)">
+              <div class="activity-header">
+                <div class="activity-left"><div class="activity-icon">🔄</div><span class="activity-title">5.10 — Migración a servicios administrados</span></div>
+                <div class="activity-right"><span class="grade-badge grade-a">Sin Calificar</span><svg class="act-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6,9 12,15 18,9"/></svg></div>
+              </div>
+              <div class="activity-body"><div class="activity-detail">
+                <div class="detail-section"><span class="detail-label">Descripción</span><p class="detail-text">Migración de la aplicación CRUD desde una infraestructura IaaS a servicios administrados (PaaS/SaaS), como RDS para base de datos, S3 para archivos estáticos y Elastic Beanstalk o equivalente para la aplicación.</p></div>
+                <div class="detail-section"><span class="detail-label">Aprendizajes obtenidos</span><ul class="learnings-list"><li>Migrar aplicaciones de IaaS a servicios administrados</li><li>Comprender las ventajas del modelo PaaS</li><li>Reducir la carga operativa con servicios cloud nativos</li></ul></div>
+                <div class="detail-section detail-full"><span class="detail-label">Evidencia (PDF)</span><a href="archivos_evidencias/5.10 Migracion a servicios administrados.pdf" class="pdf-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ver evidencia PDF — Tema 5.10</a></div>
+              </div></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /units-content -->
+  </div><!-- /main-container -->
+
+  <script>
+    function toggleUnit(header) {
+      const block = header.closest('.unit-block');
+      const isOpen = block.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.unit-block.open').forEach(b => b.classList.remove('open'));
+      // Open clicked if it was closed
+      if (!isOpen) block.classList.add('open');
+    }
+
+    function toggleActivity(item) {
+      event.stopPropagation();
+      const isOpen = item.classList.contains('open');
+      // Close siblings
+      item.closest('.activities-list').querySelectorAll('.activity-item.open').forEach(a => a.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+
+    // Highlight active TOC item on scroll
+    const units = ['u1','u2','u3','u4','u5'];
+    const tocLinks = document.querySelectorAll('.toc-item a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      units.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top < 120) current = id;
+      });
+      tocLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+      });
+    });
+  </script>
+
+</body>
+</html>

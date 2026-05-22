@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portafolio de Evidencias — Cómputo en la Nube</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #05080f;
+      --surface: #0c1220;
+      --card: #101828;
+      --border: #1e2d45;
+      --accent: #3b82f6;
+      --accent2: #06b6d4;
+      --accent3: #8b5cf6;
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --text-soft: #94a3b8;
+      --glow: rgba(59,130,246,0.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 999;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.2rem 3rem;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid transparent;
+      transition: all .4s;
+      backdrop-filter: blur(0px);
+    }
+    nav.scrolled {
+      background: rgba(5,8,15,0.85);
+      border-bottom-color: var(--border);
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -.02em;
+      color: var(--text);
+      text-decoration: none;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .nav-logo span {
+      color: var(--accent);
+    }
+    .nav-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-soft);
+      text-decoration: none;
+      font-size: .9rem;
+      font-weight: 400;
+      letter-spacing: .02em;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent);
+      color: #fff !important;
+      padding: .5rem 1.2rem;
+      border-radius: 6px;
+      font-weight: 500 !important;
+    }
+    .nav-cta:hover { background: #2563eb; color: #fff !important; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      position: relative;
+      padding: 8rem 2rem 4rem;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(59,130,246,.22) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 60%, rgba(139,92,246,.12) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 20% 70%, rgba(6,182,212,.08) 0%, transparent 60%);
+    }
+
+    /* Grid lines */
+    .hero-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
+    }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(59,130,246,.12);
+      border: 1px solid rgba(59,130,246,.3);
+      color: var(--accent2);
+      font-size: .78rem;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .35rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 2rem;
+      animation: fadeUp .8s ease both;
+    }
+    .badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent2);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent2);
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      line-height: 1.05;
+      letter-spacing: -.03em;
+      animation: fadeUp .8s .1s ease both;
+    }
+    .hero-title .line2 {
+      display: block;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      color: var(--text-soft);
+      max-width: 520px;
+      margin-left: auto; margin-right: auto;
+      animation: fadeUp .8s .2s ease both;
+    }
+
+    .hero-meta {
+      margin-top: 3rem;
+      display: flex; align-items: center; justify-content: center; gap: 1.5rem;
+      flex-wrap: wrap;
+      animation: fadeUp .8s .3s ease both;
+    }
+    .meta-chip {
+      display: flex; align-items: center; gap: .5rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .65rem 1.1rem;
+      font-size: .85rem;
+      color: var(--text-soft);
+    }
+    .meta-chip svg { flex-shrink: 0; }
+    .meta-chip strong { color: var(--text); font-weight: 500; }
+
+    .hero-buttons {
+      margin-top: 3rem;
+      display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;
+      animation: fadeUp .8s .4s ease both;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .85rem 2rem;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: .95rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all .25s;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(59,130,246,.35);
+    }
+    .btn-primary:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(59,130,246,.4); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-soft);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--text); transform: translateY(-2px); }
+
+    .scroll-hint {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      color: var(--text-muted); font-size: .75rem; letter-spacing: .08em;
+      text-transform: uppercase;
+      animation: fadeUp .8s .6s ease both;
+    }
+    .scroll-hint-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* ── SECTIONS SHARED ── */
+    section { padding: 7rem 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: .78rem;
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: .75rem;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      letter-spacing: -.02em;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+    }
+    .section-desc {
+      color: var(--text-soft);
+      font-size: 1.05rem;
+      max-width: 560px;
+      line-height: 1.8;
+    }
+
+    /* ── INTRO ── */
+    #intro {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .intro-visual {
+      position: relative;
+    }
+    .intro-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .intro-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+    .intro-stat {
+      display: flex; align-items: flex-end; gap: .5rem; margin-bottom: 1.5rem;
+    }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label { color: var(--text-soft); font-size: .9rem; padding-bottom: .5rem; }
+    .intro-tags {
+      display: flex; flex-wrap: wrap; gap: .5rem;
+    }
+    .tag {
+      background: rgba(59,130,246,.1);
+      border: 1px solid rgba(59,130,246,.2);
+      color: var(--accent);
+      font-size: .78rem;
+      padding: .3rem .75rem;
+      border-radius: 100px;
+      font-weight: 500;
+    }
+    .tag.cyan { background: rgba(6,182,212,.1); border-color: rgba(6,182,212,.2); color: var(--accent2); }
+    .tag.purple { background: rgba(139,92,246,.1); border-color: rgba(139,92,246,.2); color: var(--accent3); }
+
+    /* ── PROPÓSITO ── */
+    .proposito-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 4rem;
+    }
+    .prop-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      position: relative;
+      transition: border-color .25s, transform .25s;
+      overflow: hidden;
+    }
+    .prop-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .prop-icon {
+      width: 48px; height: 48px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1.25rem;
+    }
+    .prop-icon.blue { background: rgba(59,130,246,.15); }
+    .prop-icon.cyan { background: rgba(6,182,212,.15); }
+    .prop-icon.purple { background: rgba(139,92,246,.15); }
+    .prop-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: .75rem;
+    }
+    .prop-card p { color: var(--text-soft); font-size: .92rem; line-height: 1.7; }
+
+    /* ── MOTIVO ── */
+    #motivo { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .motivo-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .motivo-list { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+    .motivo-item {
+      display: flex; gap: 1rem; align-items: flex-start;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      transition: border-color .2s;
+    }
+    .motivo-item:hover { border-color: var(--accent); }
+    .motivo-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      min-width: 2rem;
+    }
+    .motivo-item h4 {
+      font-weight: 500;
+      font-size: .95rem;
+      margin-bottom: .2rem;
+    }
+    .motivo-item p { color: var(--text-soft); font-size: .87rem; }
+    .motivo-quote {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 12px;
+      padding: 2.5rem;
+    }
+    .motivo-quote blockquote {
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--text-soft);
+      line-height: 1.9;
+    }
+    .motivo-quote cite {
+      display: block;
+      margin-top: 1.25rem;
+      font-size: .85rem;
+      color: var(--text-muted);
+      font-style: normal;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .footer-inner { max-width: 1100px; margin: 0 auto; }
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -.02em;
+      margin-bottom: .5rem;
+    }
+    .footer-logo span { color: var(--accent); }
+    footer p { color: var(--text-muted); font-size: .85rem; }
+    .footer-divider {
+      width: 60px; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      margin: 1.5rem auto;
+      border-radius: 2px;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: .4; }
+      50%       { opacity: 1; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .intro-grid, .motivo-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .proposito-grid { grid-template-columns: 1fr; }
+      section { padding: 5rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      Portafolio<span>.CN</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#intro">Introducción</a></li>
+      <li><a href="#proposito">Propósito</a></li>
+      <li><a href="#motivo">Motivo</a></li>
+      <li><a href="unidades.html" class="nav-cta">Ver Unidades →</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO / PORTADA -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div>
+      <div class="badge">TecNM Campus Saltillo — 2024-2025</div>
+      <h1 class="hero-title">
+        Portafolio de<br>
+        <span class="line2">Evidencias</span>
+      </h1>
+      <p class="hero-subtitle">
+        Cómputo en la Nube · Ingeniería en Sistemas Computacionales
+      </p>
+      <div class="hero-meta">
+        <div class="meta-chip">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Estudiante: <strong>Diego Josue Gonzalez de Leon</strong></span>
+        </div>
+        <div class="meta-chip">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Periodo: <strong>Ene–Jun 2026</strong></span>
+        </div>
+        <div class="meta-chip">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span>Materia: <strong>Cómputo en la Nube</strong></span>
+        </div>
+      </div>
+      <div class="hero-buttons">
+        <a href="unidades.html" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Ver Unidades y Evidencias
+        </a>
+        <a href="#intro" class="btn btn-ghost">
+          Conocer más ↓
+        </a>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <div class="scroll-hint-line"></div>
+      scroll
+    </div>
+  </section>
+
+  <!-- INTRODUCCIÓN -->
+  <section id="intro">
+    <div class="container">
+      <div class="intro-grid">
+        <div class="reveal">
+          <p class="section-label">01 — Introducción</p>
+          <h2 class="section-title">¿Qué es este portafolio?</h2>
+          <p class="section-desc">
+            Este portafolio de evidencias recopila los trabajos, actividades, logros y aprendizajes obtenidos a lo largo del curso de <strong style="color:var(--text)">Cómputo en la Nube</strong>, impartido en el TecNM Campus Saltillo.
+          </p>
+          <p class="section-desc" style="margin-top:1rem">
+            Cada sección documenta el proceso de aprendizaje por unidad, desde los fundamentos de la nube hasta el despliegue de aplicaciones en infraestructura real, incluyendo reflexiones personales y evidencias de cada actividad.
+          </p>
+          <a href="unidades.html" class="btn btn-primary" style="margin-top:2rem;display:inline-flex">
+            Explorar las 5 unidades →
+          </a>
+        </div>
+        <div class="reveal" style="transition-delay:.15s">
+          <div class="intro-card">
+            <div class="intro-stat">
+              <span class="stat-num">5</span>
+              <span class="stat-label">Unidades del curso</span>
+            </div>
+            <div class="intro-stat">
+              <span class="stat-num">27</span>
+              <span class="stat-label">Actividades realizadas</span>
+            </div>
+            <div class="intro-tags" style="margin-top:1rem">
+              <span class="tag">AWS</span>
+              <span class="tag cyan">Google Cloud</span>
+              <span class="tag purple">Azure</span>
+              <span class="tag">Docker</span>
+              <span class="tag cyan">LAMP</span>
+              <span class="tag purple">Ciberseguridad</span>
+              <span class="tag">Microservicios</span>
+              <span class="tag cyan">CI/CD</span>
+              <span class="tag purple">CRUD</span>
+              <span class="tag">GitHub</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROPÓSITO -->
+  <section id="proposito">
+    <div class="container">
+      <div class="reveal" style="text-align:center;max-width:600px;margin:0 auto">
+        <p class="section-label">02 — Propósito</p>
+        <h2 class="section-title">¿Para qué sirve este portafolio?</h2>
+        <p class="section-desc" style="margin:0 auto">
+          Este portafolio tiene como finalidad demostrar el crecimiento académico y las competencias desarrolladas durante el semestre en el área de tecnologías en la nube.
+        </p>
+      </div>
+      <div class="proposito-grid">
+        <div class="prop-card reveal" style="transition-delay:.05s">
+          <div class="prop-icon blue">📚</div>
+          <h3>Documentar el aprendizaje</h3>
+          <p>Registrar de forma organizada cada actividad, práctica y proyecto realizado durante el curso, con sus respectivas evidencias y reflexiones personales.</p>
+        </div>
+        <div class="prop-card reveal" style="transition-delay:.1s">
+          <div class="prop-icon cyan">🎯</div>
+          <h3>Demostrar competencias</h3>
+          <p>Evidenciar las habilidades adquiridas en el uso de plataformas cloud (AWS, GCP, Azure), seguridad informática, contenerización y despliegue de aplicaciones.</p>
+        </div>
+        <div class="prop-card reveal" style="transition-delay:.15s">
+          <div class="prop-icon purple">🔍</div>
+          <h3>Reflexión y mejora continua</h3>
+          <p>Identificar fortalezas y áreas de oportunidad mediante el análisis de cada evidencia, para aplicar los conocimientos adquiridos en el ámbito profesional.</p>
+        </div>
+        <div class="prop-card reveal" style="transition-delay:.2s">
+          <div class="prop-icon blue">🌐</div>
+          <h3>Integrar conocimientos</h3>
+          <p>Conectar los conceptos teóricos con la aplicación práctica en plataformas reales de cómputo en la nube que se utilizan en la industria actual.</p>
+        </div>
+        <div class="prop-card reveal" style="transition-delay:.25s">
+          <div class="prop-icon cyan">📊</div>
+          <h3>Evaluación del progreso</h3>
+          <p>Servir como herramienta de evaluación que permita al docente y al estudiante medir el avance en las competencias de la asignatura a lo largo del semestre.</p>
+        </div>
+        <div class="prop-card reveal" style="transition-delay:.3s">
+          <div class="prop-icon purple">🚀</div>
+          <h3>Proyección profesional</h3>
+          <p>Constituir un recurso valioso para demostrar capacidades en el área de cloud computing ante futuros empleadores o en la continuación de estudios superiores.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOTIVO -->
+  <section id="motivo">
+    <div class="container">
+      <div class="motivo-inner">
+        <div class="reveal">
+          <p class="section-label">03 — Motivo</p>
+          <h2 class="section-title">¿Por qué elaboré este portafolio?</h2>
+          <p class="section-desc">
+            La elaboración de este portafolio responde tanto a un requerimiento académico como a una decisión personal de sistematizar el aprendizaje de la asignatura en un solo lugar.
+          </p>
+          <div class="motivo-list">
+            <div class="motivo-item">
+              <span class="motivo-num">01</span>
+              <div>
+                <h4>Cumplimiento académico</h4>
+                <p>Requerimiento formal del curso de Cómputo en la Nube del TecNM Campus Saltillo para acreditar la asignatura.</p>
+              </div>
+            </div>
+            <div class="motivo-item">
+              <span class="motivo-num">02</span>
+              <div>
+                <h4>Organización del conocimiento</h4>
+                <p>Consolidar en un solo lugar todas las actividades y aprendizajes para tener una referencia clara del semestre.</p>
+              </div>
+            </div>
+            <div class="motivo-item">
+              <span class="motivo-num">03</span>
+              <div>
+                <h4>Crecimiento profesional</h4>
+                <p>El cómputo en la nube es una habilidad fundamental en la industria TI; este portafolio documenta ese primer paso.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay:.2s">
+          <div class="motivo-quote">
+            <blockquote>
+              "El cómputo en la nube no es solo una tecnología; es una nueva forma de pensar cómo se diseñan, despliegan y escalan las soluciones informáticas en el mundo moderno."
+            </blockquote>
+            <cite>— Reflexión personal sobre el curso</cite>
+          </div>
+          <div style="margin-top:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.75rem">
+            <p style="color:var(--text-soft);font-size:.92rem;line-height:1.8">
+              A lo largo del semestre tuve la oportunidad de explorar plataformas como <strong style="color:var(--text)">AWS, Google Cloud y Microsoft Azure</strong>, además de trabajar con herramientas de ciberseguridad, contenerización con Docker y despliegue de aplicaciones CRUD en la nube. Este portafolio es el resultado de ese proceso.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">Portafolio<span>.CN</span></div>
+      <div class="footer-divider"></div>
+      <p>Cómputo en la Nube · TecNM Campus Saltillo · Ingeniería en Sistemas Computacionales</p>
+      <p style="margin-top:.5rem">Elaborado con fines académicos — Periodo Enero–Junio 2025</p>
+    </div>
+  </footer>
+
+  <script>
+    // Navbar scroll
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Reveal on scroll
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    reveals.forEach(r => io.observe(r));
+  </script>
+</body>
+</html>
